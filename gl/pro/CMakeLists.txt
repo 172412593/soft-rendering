@@ -1,0 +1,5 @@
+aux_source_directory(. PRO_LIB_SRCS)
+include_directories(../base)
+include_directories(../window)
+add_library(prolib ${PRO_LIB_SRCS})
+target_link_libraries(prolib mathlib windowlib)
