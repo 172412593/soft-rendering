@@ -20,7 +20,7 @@ namespace GLM {
     void translate( Matrix4f& m,Vector4& v);
     void scale(Matrix4f& m,Vector4& v);
     void rotate(Matrix4f& m,float theta,Vector4& v);
-    void lookAt(Matrix4f& m,  Vector4& eye,Vector4& at,Vector4 &up);
+    void lookAt(Matrix4f& m, Vector4& eye,Vector4& at,Vector4 &up);
     void perspective(Matrix4f &m,float fovy, float aspect,float zn,float zf);
     int check_cvv(const Vector4& v);
 

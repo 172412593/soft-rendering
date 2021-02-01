@@ -9,6 +9,8 @@
 namespace GLM{
     class GLWindow;
     typedef void(*__CALLBACK)(GLWindow&);
+
+    typedef void(*__MOUSE_CALLBACK)(double, double);
     enum KeyState{KEY_UP,KEY_DOWN};
     class GLWindow{
     private:
@@ -16,7 +18,7 @@ namespace GLM{
     public:
 
 
-        Camera camera;
+        
         Device device;
         HWND screen_handle;		// 主窗口 HWND
         HDC screen_dc;			// 配套的 HDC
@@ -35,12 +37,14 @@ namespace GLM{
         static LRESULT screen_events(HWND hWnd, UINT msg,
         WPARAM wParam, LPARAM lParam);
         KeyState getKeyState(int VK);
+
     public:
         void loop();
-
+        void setView(Matrix4f& view);
         Graphic& createGraphic();
 
         __CALLBACK onDraw;
+        static __MOUSE_CALLBACK onMouseMove;
     
     };
 }

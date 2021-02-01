@@ -4,6 +4,7 @@ namespace GLM {
     int screen_w, screen_h, screen_exit = 0;
     int screen_mx = 0, screen_my = 0, screen_mb = 0;
     KeyState screen_keys[512];    // 当前键盘按下状态
+    __MOUSE_CALLBACK GLWindow::onMouseMove=NULL;
     LRESULT GLWindow::screen_events(HWND hWnd, UINT msg,
                                     WPARAM wParam, LPARAM lParam) {
         switch (msg) {
@@ -16,6 +17,15 @@ namespace GLM {
             case WM_KEYUP:
                 screen_keys[wParam & 511] = KEY_UP;
                 break;
+            case WM_MOUSEMOVE:{
+                    int x=LOWORD(lParam);//鼠标的横坐标
+		            int y=HIWORD(lParam);
+                    if(onMouseMove!=NULL){
+                        onMouseMove(x,y);
+                    }
+                    
+                }
+                break;
             default:
                 return DefWindowProc(hWnd, msg, wParam, lParam);
         }
@@ -23,8 +33,9 @@ namespace GLM {
     }
 
     GLWindow::GLWindow() : screen_handle(NULL), screen_hb(NULL), screen_dc(NULL), screen_ob(NULL), screen_fb(NULL),
-                           graphic(NULL) {
+                           graphic(NULL){
         onDraw = NULL;
+        onMouseMove = NULL;
     }
 
     GLWindow::~GLWindow() {
@@ -134,7 +145,7 @@ namespace GLM {
         Texture texture;
 
         device.init(screen_w, screen_h, screen_fb);
-        camera.atZero(device, 3, 0, 0);
+        
 
         texture.init();
         texture.bind(device);
@@ -144,7 +155,7 @@ namespace GLM {
         while (screen_exit == 0 && screen_keys[VK_ESCAPE] == 0) {
             dispatch();
             device.clear(1);
-            camera.atZero(device, pos, 0, 0);
+            
 
             if (screen_keys[VK_UP]) pos -= 0.01f;
             if (screen_keys[VK_DOWN]) pos += 0.01f;
@@ -177,5 +188,10 @@ namespace GLM {
 
     KeyState GLWindow::getKeyState(int VK) {
         return screen_keys[VK];
+    }
+
+    void GLWindow::setView(Matrix4f& view){
+        device.transform.view=view;
+        device.transform.update();
     }
 } // namespace GLM
